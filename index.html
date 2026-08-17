@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2ºC IFA - Projetos de Acessibilidade</title>
+    <style>
+        /* VARIÁVEIS DE COR E FONTE - MODO DARK TECH */
+        :root {
+            --azul-base: #75E6DA; 
+            --azul-texto: #e2e8f0; 
+            --cor-card-vidro: rgba(4, 25, 48, 0.65); 
+            --cor-borda-vidro: rgba(117, 230, 218, 0.3); 
+            --brilho-neon: 0 0 15px rgba(117, 230, 218, 0.2);
+            --tamanho-fonte: 1rem;
+        }
+
+        /* MODO ALTO CONTRASTE */
+        body.alto-contraste {
+            background: #000 !important;
+            --azul-texto: #fff;
+            --cor-card-vidro: #121212;
+            --cor-borda-vidro: #ffff00;
+            --azul-base: #ffff00;
+            --brilho-neon: none;
+        }
+        body.alto-contraste .tab-panel h2 { color: #ffff00 !important; text-shadow: none !important; }
+        body.alto-contraste .tab-button[aria-selected="true"] { color: #ffff00 !important; border-bottom-color: #ffff00 !important; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* FUNDO PROFUNDO E ANIMADO */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: var(--tamanho-fonte);
+            line-height: 1.6;
+            color: var(--azul-texto);
+            background: linear-gradient(-45deg, #021224, #053147, #0b5e75, #021224);
+            background-size: 400% 400%;
+            animation: fundoGradiente 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fundoGradiente {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* BARRA DE ACESSIBILIDADE */
+        .accessibility-bar {
+            background-color: rgba(2, 18, 36, 0.9);
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid var(--cor-borda-vidro);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .acc-buttons button {
+            background-color: transparent;
+            color: var(--azul-base);
+            border: 1px solid var(--azul-base);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .acc-buttons button:hover, .acc-buttons button:focus {
+            background-color: var(--azul-base);
+            color: #021224;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(117, 230, 218, 0.6);
+            outline: none;
+        }
+
+        .btn-ativo {
+            background-color: #ff5e57 !important;
+            border-color: #ff5e57 !important;
+            color: #fff !important;
+            box-shadow: 0 0 15px rgba(255, 94, 87, 0.6) !important;
+            animation: pulsarBotao 1.5s infinite;
+        }
+
+        @keyframes pulsarBotao {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* CABEÇALHO */
+        header {
+            text-align: center;
+            padding: 4rem 1.5rem 2rem 1.5rem;
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(117, 230, 218, 0.5);
+            margin-bottom: 1rem;
+            animation: descerFade 1s ease-out;
+        }
+
+        .maquina-escrever {
+            color: var(--azul-base);
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: inline-block;
+            border-right: 3px solid var(--azul-base);
+            white-space: nowrap;
+            overflow: hidden;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            animation: piscarCursor 0.75s step-end infinite;
+        }
+
+        /* CAIXA DE CONTEÚDO FORA DA CAIXA (DARK GLASS) */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1000px;
+            margin: 1rem auto 4rem auto;
+            padding: 0 1rem;
+        }
+
+        .tabs-container {
+            background: var(--cor-card-vidro);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--cor-borda-vidro);
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset var(--brilho-neon);
+            overflow: hidden;
+            animation: subirFade 1s ease-out 0.5s both;
+        }
+
+        /* BOTÕES DAS ABAS - ESTILO PAINEL DE CONTROLE */
+        .tab-list {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: rgba(2, 18, 36, 0.8);
+            border-bottom: 1px solid var(--cor-borda-vidro);
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 160px;
+            padding: 1.5rem 1rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #64748b; 
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-button:hover {
+            color: #fff;
+            background: rgba(117, 230, 218, 0.05);
+        }
+
+        .tab-button[aria-selected="true"] { 
+            color: var(--azul-base); 
+            border-bottom: 3px solid var(--azul-base); 
+            background: rgba(117, 230, 218, 0.1);
+            text-shadow: 0 0 10px rgba(117, 230, 218, 0.5);
+        }
+
+        /* PAINEL DE CONTEÚDO */
+        .tab-panel {
+            padding: 3.5rem 3rem;
+            display: none;
+        }
+
+        .tab-panel:not([hidden]) {
+            display: block;
+        }
+
+        .tab-panel h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--azul-base);
+            border-bottom: 2px dashed rgba(117, 230, 218, 0.3);
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(117, 230, 218, 0.4);
+        }
+
+        .tab-panel p {
+            font-size: 1.15rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.8;
+            font-weight: 300; 
+        }
+        
+        .tab-panel strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* CSS MÁGICO DO HOLOGRAMA 3D */
+        .tilt-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+            margin-top: 2rem;
+            border-radius: 12px;
+            perspective: 1000px; /* Cria a profundidade 3D */
+        }
+
+        .foto-cruzamento {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border: 1px solid rgba(117, 230, 218, 0.2);
+            transition: transform 0.1s ease-out; /* Transição super rápida para acompanhar o mouse */
+        }
+
+        /* A malha cibernética que aparece por cima */
+        .tilt-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 12px;
+            background: 
+                linear-gradient(rgba(117, 230, 218, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(117, 230, 218, 0.3) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none; /* Deixa o mouse "atravessar" a malha */
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.1s ease-out;
+            box-shadow: inset 0 0 30px rgba(117, 230, 218, 0.6);
+            overflow: hidden;
+        }
+
+        /* A linha de scanner brilhante */
+        .tilt-grid::after {
+            content: '';
+            position: absolute;
+            top: -100%; left: 0; width: 100%; height: 15%;
+            background: linear-gradient(to bottom, transparent, rgba(117, 230, 218, 0.8), transparent);
+            animation: scanline 2.5s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { top: -20%; }
+            100% { top: 120%; }
+        }
+
+        /* ANIMAÇÕES DAS ABAS */
+        #aba-acessibilidade:not([hidden]) { animation: balancoEntrada 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; }
+        #aba-mobilidade:not([hidden]) { animation: balancoEntrada 0.7s ease-out forwards; }
+        #aba-visao:not([hidden]) { animation: balancoEntrada 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        #aba-brigadeiro:not([hidden]) { animation: balancoEntrada 0.7s ease forwards; }
+        #aba-chagas:not([hidden]) { animation: balancoEntrada 0.9s ease forwards; }
+
+        /* RODAPÉ INTEGRADO */
+        footer {
+            background-color: rgba(2, 18, 36, 0.9);
+            color: #94a3b8;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            margin-top: auto; 
+            border-top: 1px solid var(--cor-borda-vidro);
+            backdrop-filter: blur(10px);
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        footer strong { color: var(--azul-base); }
+
+        /* KEYFRAMES */
+        @keyframes descerFade { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes subirFade { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes piscarCursor { 50% { border-color: transparent; } }
+        @keyframes balancoEntrada { 0% { opacity: 0; transform: perspective(400px) rotateX(10deg); } 100% { opacity: 1; transform: perspective(400px) rotateX(0deg); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            body { background: #021224; }
+        }
+
+        /* CONTROLE DO VLIBRAS */
+        #container-vlibras { display: none; z-index: 99999 !important; }
+        #container-vlibras.mostrar-libras { display: block !important; }
+        [vw-access-button] { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div vw class="enabled" id="container-vlibras">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+
+    <div class="accessibility-bar" role="region" aria-label="Ferramentas de Acessibilidade">
+        <span>Acessibilidade 2ºC IFA:</span>
+        <div class="acc-buttons">
+            <button id="btn-voz" onclick="alternarComandoVoz()" aria-label="Navegar por comando de voz">🎤 Comando de Voz</button>
+            <button id="btn-leitura" onclick="alternarLeitura()" aria-label="Ativar ou desativar leitura em voz alta">🔊 Ouvir Conteúdo</button>
+            <button id="btn-libras" onclick="alternarLibras()" aria-label="Abrir ou fechar Tradutor de Libras">🤟 Libras</button>
+            <button onclick="alterarFonte(1)" aria-label="Aumentar tamanho do texto">A+</button>
+            <button onclick="alterarFonte(-1)" aria-label="Diminuir tamanho do texto">A-</button>
+            <button onclick="alternarAltoContraste()" aria-label="Ativar Alto Contraste">Alto Contraste</button>
+        </div>
+    </div>
+
+    <header role="banner">
+        <h1>Turma 2ºC IFA</h1>
+        <div class="maquina-escrever" id="texto-maquina"></div>
+    </header>
+
+    <main id="conteudo-principal">
+        <div class="tabs-container">
+            
+            <div class="tab-list" role="tablist" aria-label="Navegação dos Projetos">
+                <button class="tab-button" role="tab" aria-selected="true" aria-controls="aba-acessibilidade" onclick="abrirAba(event, 'aba-acessibilidade')">O que é?</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="aba-mobilidade" onclick="abrirAba(event, 'aba-mobilidade')">Baixa Mobilidade</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="aba-visao" onclick="abrirAba(event, 'aba-visao')">Baixa Visão</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="aba-brigadeiro" onclick="abrirAba(event, 'aba-brigadeiro')">Brigadeiro x XV</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="aba-chagas" onclick="abrirAba(event, 'aba-chagas')">Padre Chagas</button>
+            </div>
+
+            <div id="aba-acessibilidade" class="tab-panel" role="tabpanel" tabindex="0">
+                <h2>O que é Acessibilidade?</h2>
+                <p><strong>O Conceito:</strong> Acessibilidade significa garantir que espaços, transportes, informações e serviços possam ser utilizados por todas as pessoas com autonomia e segurança, independentemente de suas capacidades físicas, sensoriais, cognitivas ou motoras.</p>
+                <p><strong>Por que é essencial?</strong> Envolve a criação de calçadas niveladas, semáforos com aviso sonoro, textos em braille, intérpretes de Libras e sites adaptados. Acessibilidade é um direito, não um privilégio.</p>
+                <p><strong>Nosso Objetivo:</strong> Através dos projetos da turma <strong>2ºC IFA</strong>, queremos trazer luz às barreiras invisíveis. Ao vivenciar limitações e analisar o trânsito no entorno do nosso colégio, propomos soluções para transformar nossa cidade num lugar mais justo.</p>
+            </div>
+
+            <div id="aba-mobilidade" class="tab-panel" role="tabpanel" tabindex="0" hidden>
+                <h2>Simulador de Baixa Mobilidade</h2>
+                <p><strong>O que é o tema:</strong> A baixa mobilidade atinge pessoas que possuem limitações temporárias ou permanentes para se deslocar (cadeirantes, idosos, gestantes, pessoas com próteses ou muletas).</p>
+                <p><strong>Nosso Projeto (Grupo 1):</strong> Criamos um simulador prático. O objetivo é permitir que as pessoas sintam na pele as dificuldades reais do espaço urbano, como calçadas esburacadas e falta de rampas. Entender o problema na prática gera empatia.</p>
+            </div>
+
+            <div id="aba-visao" class="tab-panel" role="tabpanel" tabindex="0" hidden>
+                <h2>Simulador de Baixa Visão</h2>
+                <p><strong>O que é o tema:</strong> A baixa visão ocorre quando a pessoa apresenta perda significativa da acuidade visual, algo que não pode ser totalmente corrigido apenas com óculos comuns, cirurgias ou lentes.</p>
+                <p><strong>Nosso Projeto (Grupo 2):</strong> Desenvolvemos um simulador com óculos adaptados. A experiência demonstra a importância vital de calçadas bem estruturadas, pisos táteis de alerta e direcional, e do contraste de cores na sinalização urbana.</p>
+            </div>
+
+            <div id="aba-brigadeiro" class="tab-panel" role="tabpanel" tabindex="0" hidden>
+                <h2>Rotatória: Brigadeiro Rocha x XV de Novembro</h2>
+                <p><strong>O Problema:</strong> Esta rotatória é um ponto crítico. O grande fluxo de veículos aliado ao formato da via torna a travessia de pedestres, especialmente dos alunos, extremamente perigosa e demorada.</p>
+                <p><strong>Nossa Solução (Grupo 3):</strong> Apresentamos um estudo de melhoria: readequação da rotatória, instalação de faixas elevadas para forçar a redução de velocidade e semáforos com sinalização sonora.</p>
+                <!-- A imagem original continua aqui, o JS vai cuidar do resto -->
+                <img src="brigadeiro-xv.jpg" alt="Foto do cruzamento entre a Rua Brigadeiro Rocha e a Rua XV de Novembro" class="foto-cruzamento">
+            </div>
+
+            <div id="aba-chagas" class="tab-panel" role="tabpanel" tabindex="0" hidden>
+                <h2>Cruzamento: Padre Chagas x Xavier da Silva</h2>
+                <p><strong>O Problema:</strong> Outro gargalo ao redor do Colégio. A via sofre com falta de visibilidade nos cruzamentos e velocidade excessiva dos carros, colocando em risco todos que transitam por ali.</p>
+                <p><strong>Nossa Solução (Grupo 4):</strong> O projeto propõe o rebaixamento adequado de todas as calçadas das esquinas (com inclinação correta), reforço na sinalização de PARE e instalação de piso tátil para guiar pedestres.</p>
+                <!-- A imagem original continua aqui, o JS vai cuidar do resto -->
+                <img src="padre-chagas-xavier.jpg" alt="Foto do cruzamento entre a Rua Padre Chagas e a Rua Xavier da Silva" class="foto-cruzamento">
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; Feira Cultural - Colégio Estadual Visconde de Guarapuava</p>
+        <p>Desenvolvido com muito 💙 pela turma <strong>2ºC IFA</strong></p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        // INICIALIZA VLIBRAS
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+
+        // --- SISTEMA DE SONS (WEB AUDIO API) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function inicializarAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function tocarSom(tipo) {
+            inicializarAudio();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (tipo === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (tipo === 'tab') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            }
+        }
+
+        // --- EFEITO HOLOGRAMA 3D NAS IMAGENS ---
+        // Este código encontra as imagens, cria a caixa holográfica e calcula a matemática do mouse
+        document.addEventListener("DOMContentLoaded", () => {
+            const imagens = document.querySelectorAll('.foto-cruzamento');
+            
+            imagens.forEach(img => {
+                // Cria a caixa que vai embrulhar a imagem
+                const wrapper = document.createElement('div');
+                wrapper.className = 'tilt-wrapper';
+                img.parentNode.insertBefore(wrapper, img);
+                wrapper.appendChild(img);
+
+                // Cria o grid cibernético que fica por cima
+                const grid = document.createElement('div');
+                grid.className = 'tilt-grid';
+                wrapper.appendChild(grid);
+
+                // Quando o mouse anda por cima da caixa
+                wrapper.addEventListener('mousemove', (e) => {
+                    const rect = wrapper.getBoundingClientRect();
+                    const x = e.clientX - rect.left; // Posição X do mouse na imagem
+                    const y = e.clientY - rect.top;  // Posição Y do mouse na imagem
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    // Matemática para calcular quantos graus a imagem vai virar
+                    const rotateX = ((y - centerY) / centerY) * -15; // Max 15 graus
+                    const rotateY = ((x - centerX) / centerX) * 15;
+                    
+                    // Aplica a inclinação na imagem e levanta ela (scale)
+                    img.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+                    
+                    // Acende o grid cibernético e faz ele "flutuar" um pouco acima da imagem (translateZ)
+                    grid.style.opacity = '1';
+                    grid.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05) translateZ(30px)`;
+                });
+
+                // Quando o mouse sai da imagem, volta tudo ao normal
+                wrapper.addEventListener('mouseleave', () => {
+                    img.style.transform = `rotateX(0) rotateY(0) scale(1)`;
+                    grid.style.opacity = '0';
+                    grid.style.transform = `rotateX(0) rotateY(0) scale(1) translateZ(0)`;
+                });
+            });
+        });
+
+        // --- NAVEGAÇÃO POR COMANDO DE VOZ ---
+        const btnVoz = document.getElementById('btn-voz');
+        let reconhecedor;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            reconhecedor = new SpeechRecognition();
+            reconhecedor.lang = 'pt-BR';
+            reconhecedor.continuous = false; 
+            reconhecedor.interimResults = false;
+
+            reconhecedor.onstart = function() {
+                btnVoz.classList.add('btn-ativo');
+                btnVoz.innerHTML = "🎙️ Ouvindo...";
+            };
+
+            reconhecedor.onresult = function(event) {
+                const comando = event.results[0][0].transcript.toLowerCase();
+                let abaAlvo = null;
+
+                if(comando.includes('acessibilidade') || comando.includes('o que é') || comando.includes('o que')) abaAlvo = 'aba-acessibilidade';
+                else if(comando.includes('mobilidade')) abaAlvo = 'aba-mobilidade';
+                else if(comando.includes('visão') || comando.includes('visao')) abaAlvo = 'aba-visao';
+                else if(comando.includes('brigadeiro') || comando.includes('15') || comando.includes('xv')) abaAlvo = 'aba-brigadeiro';
+                else if(comando.includes('chagas') || comando.includes('padre') || comando.includes('xavier')) abaAlvo = 'aba-chagas';
+
+                if(abaAlvo) {
+                    const abaBtn = document.querySelector(`[aria-controls="${abaAlvo}"]`);
+                    if(abaBtn) abaBtn.click();
+                } else {
+                    alert('Não entendi a aba. Diga algo como: "Mobilidade", "Visão" ou "Brigadeiro".');
+                }
+            };
+
+            reconhecedor.onend = function() { btnVoz.classList.remove('btn-ativo'); btnVoz.innerHTML = "🎤 Comando de Voz"; };
+            reconhecedor.onerror = function() { btnVoz.classList.remove('btn-ativo'); btnVoz.innerHTML = "🎤 Comando de Voz"; };
+        }
+
+        function alternarComandoVoz() {
+            tocarSom('click');
+            if (reconhecedor) {
+                try { reconhecedor.start(); } catch(e) { reconhecedor.stop(); }
+            } else {
+                alert("O seu navegador não suporta a função de Comando de Voz (tente usar o Google Chrome).");
+            }
+        }
+
+        // --- FUNÇÕES DA PÁGINA ---
+        function alternarLibras() {
+            tocarSom('click');
+            const containerVlibras = document.getElementById('container-vlibras');
+            const btnLibras = document.getElementById('btn-libras');
+            
+            if (!containerVlibras.classList.contains('mostrar-libras')) {
+                containerVlibras.classList.add('mostrar-libras');
+                btnLibras.innerHTML = "❌ Ocultar Libras";
+                btnLibras.classList.add('btn-ativo');
+                setTimeout(() => {
+                    const botaoOcultoVlibras = document.querySelector('[vw-access-button]');
+                    if (botaoOcultoVlibras) botaoOcultoVlibras.click();
+                }, 100); 
+            } else {
+                containerVlibras.classList.remove('mostrar-libras');
+                btnLibras.innerHTML = "🤟 Libras";
+                btnLibras.classList.remove('btn-ativo'); 
+            }
+        }
+
+        const texto = "Projetos de Acessibilidade e Mobilidade Urbana";
+        let i = 0;
+        function digitar() {
+            if (i < texto.length) {
+                document.getElementById("texto-maquina").innerHTML += texto.charAt(i);
+                i++;
+                setTimeout(digitar, 50);
+            }
+        }
+        window.onload = digitar;
+
+        function abrirAba(evento, idAba) {
+            tocarSom('tab'); 
+            const paineis = document.querySelectorAll('.tab-panel');
+            const botoes = document.querySelectorAll('.tab-button');
+
+            paineis.forEach(painel => {
+                painel.hidden = true;
+                painel.style.animation = 'none';
+                painel.offsetHeight; 
+                painel.style.animation = null; 
+            });
+
+            botoes.forEach(botao => botao.setAttribute('aria-selected', 'false'));
+            document.getElementById(idAba).hidden = false;
+            
+            if(evento) evento.currentTarget.setAttribute('aria-selected', 'true');
+            pararLeitura();
+        }
+
+        let lendo = false;
+        const btnLeitura = document.getElementById("btn-leitura");
+
+        function alternarLeitura() {
+            tocarSom('click');
+            if (window.speechSynthesis.speaking) pararLeitura();
+            else iniciarLeitura();
+        }
+
+        function iniciarLeitura() {
+            const abaAtiva = document.querySelector('.tab-panel:not([hidden])');
+            if (abaAtiva) {
+                const fala = new SpeechSynthesisUtterance(abaAtiva.innerText);
+                fala.lang = 'pt-BR';
+                fala.onend = function() {
+                    btnLeitura.innerHTML = "🔊 Ouvir Conteúdo";
+                    btnLeitura.classList.remove('btn-ativo');
+                    lendo = false;
+                };
+                window.speechSynthesis.speak(fala);
+                btnLeitura.innerHTML = "🔇 Parar Leitura";
+                btnLeitura.classList.add('btn-ativo');
+                lendo = true;
+            }
+        }
+
+        function pararLeitura() {
+            window.speechSynthesis.cancel();
+            btnLeitura.innerHTML = "🔊 Ouvir Conteúdo";
+            btnLeitura.classList.remove('btn-ativo');
+            lendo = false;
+        }
+
+        let tamanhoAtual = 100;
+        function alterarFonte(fator) {
+            tocarSom('click');
+            tamanhoAtual += fator * 10;
+            if (tamanhoAtual < 80) tamanhoAtual = 80;
+            if (tamanhoAtual > 150) tamanhoAtual = 150;
+            document.documentElement.style.fontSize = tamanhoAtual + '%';
+        }
+
+        function alternarAltoContraste() {
+            tocarSom('click');
+            document.body.classList.toggle('alto-contraste');
+        }
+    </script>
+</body>
+</html>
